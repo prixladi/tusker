@@ -1,15 +1,19 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
 
 const router = new Router();
 
 const schema = {
   body: z
     .object({
-      name: z.string().min(5),
+      name: z
+        .string()
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+        .min(5)
+        .max(35),
       maxParallelTasks: z.number().min(1).max(200).optional().default(1),
       maxTasksPerSecond: z.number().min(1).max(2000).optional().default(1),
       minBackoff: z
@@ -31,7 +35,7 @@ const schema = {
 
 type Body = z.infer<typeof schema.body>;
 
-router.post("/", validate(schema), async (ctx) => {
+router.post('/', validate(schema), async (ctx) => {
   const queue = (await ctx.request.body().value) as Body;
 
   const exists = await Queue.findOne({ name: queue.name });

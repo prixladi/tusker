@@ -9,6 +9,9 @@ export type Queue = {
   minBackoff: number;
   maxBackoff: number;
   maxRetries: number | null;
+  stats: {
+    taskCount: number;
+  };
 
   createdAt: Date;
   updatedAt?: Date;

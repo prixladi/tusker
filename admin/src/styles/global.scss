@@ -1,0 +1,19 @@
+@import 'src/styles/colors';
+
+@import 'preflight.scss';
+@import 'headings.scss';
+
+body {
+  background-color: $charleston_green;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+
+  height: 100vh;
+  padding: 1em;
+
+  color: white;
+
+  overflow-y: scroll;
+}

@@ -1,21 +1,29 @@
-import { createResource, createSignal } from 'solid-js';
-import apiClient, { QueueList } from './client';
+import { createEffect, createResource, createSignal } from 'solid-js';
 
-type SearchAndPagination = {
-  search?: string;
-  skip: number;
-  limit: number;
-};
+import { getQueues, SearchAndPaginationModel } from './calls';
 
-const getQueues = async (query: SearchAndPagination) => {
-  const response = await apiClient.get<QueueList>('queues', { params: query });
-  return response.data;
-};
+import debounce from 'debounce';
+import { QueueList } from './client';
 
-const createGetQueues = (def: SearchAndPagination = { skip: 0, limit: 20 }) => {
+const createGetQueues = (
+  def: SearchAndPaginationModel = { skip: 0, limit: 20 }
+) => {
   const [query, setQuery] = createSignal(def);
 
-  const [queueList] = createResource(query, getQueues);
+  const fn = async (query: SearchAndPaginationModel) => {
+    const res = await getQueues(query);
+    if (res) setQueueList(res);
+  };
+  const debouncedFn = debounce(fn, 300);
+
+  const [queueList, setQueueList] = createSignal(null as QueueList | null);
+
+  let first = true;
+
+  createEffect(async () => {
+    await (first ? fn(query()) : debouncedFn(query()));
+    first = false;
+  });
 
   return { queueList, query, setQuery };
 };

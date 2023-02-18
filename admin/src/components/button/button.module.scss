@@ -1,0 +1,18 @@
+@import 'src/styles/animations';
+@import 'src/styles/colors';
+
+.button {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: $royal_orange;
+
+  padding: 1em;
+  background: $charcoal;
+
+  cursor: pointer;
+
+  border-radius: 1em;
+  border: none;
+
+  @include animatedBoxOutline;
+}

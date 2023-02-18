@@ -1,0 +1,32 @@
+@import 'src/styles/colors';
+
+.container {
+  display: flex;
+  gap: 0.4em;
+  background-color: $charcoal;
+
+  padding: 0.8em;
+  border-radius: 1em;
+
+  max-width: 480px;
+  width: 100%;
+  margin: auto;
+}
+
+.item {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: $light_gray;
+
+  text-decoration: none;
+
+  &.link {
+    color: $royal_orange;
+  }
+}
+
+.divider {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: $light_gray;
+}

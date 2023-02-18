@@ -1,0 +1,18 @@
+@import 'src/styles/animations';
+@import 'src/styles/colors';
+
+.button {
+  width: 3.5em;
+  height: 3.5em;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background-color: rgba(59,130,246);
+  border-radius: 9999px;
+  padding: 0.8em;
+
+  cursor: pointer;
+}

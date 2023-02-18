@@ -1,0 +1,142 @@
+@import 'src/styles/media';
+@import 'src/styles/colors';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  max-width: 980px;
+  margin: auto;
+
+  @include media-md {
+    padding-top: 2em;
+    gap: 3em;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+
+    .searchBar {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+
+      .searchGroup {
+        width: 100%;
+      }
+
+      .searchInput {
+        border-right: 0;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+
+    .table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+
+      .row {
+        display: grid;
+        grid-template-columns: 50% 50%;
+
+        border-radius: 1em;
+        padding: 0.7em;
+        background-color: $charcoal;
+
+        @include media-md {
+          grid-template-columns: 34% 33% 33%;
+          padding: 1em;
+        }
+
+        @include media-lg {
+          grid-template-columns: 34% 22% 22% 22%;
+          padding: 1em;
+        }
+
+        &.header {
+          .item {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: $royal_orange;
+
+            &.headerName {
+              text-align: left;
+            }
+
+            &.headerTaskCount {
+              border-left: solid;
+              border-color: $dark_lava;
+            }
+
+            &.headerMaxTasksPerSecond {
+              border-left: solid;
+              border-color: $dark_lava;
+              display: none;
+
+              @include media-md {
+                display: block;
+              }
+            }
+
+            &.headerMinBackoff {
+              border-left: solid;
+              border-color: $dark_lava;
+              display: none;
+
+              @include media-lg {
+                display: block;
+              }
+            }
+          }
+        }
+
+        .item {
+          font-size: 1.1em;
+          text-align: center;
+
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+
+          &.name {
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: left;
+            color: $light_gray;
+            cursor: pointer;
+          }
+
+          &.taskCount {
+            border-left: solid;
+            border-color: $dark_lava;
+          }
+
+          &.maxTasksPerSecond {
+            border-left: solid;
+            border-color: $dark_lava;
+            display: none;
+
+            @include media-md {
+              display: block;
+            }
+          }
+
+          &.minBackoff {
+            border-left: solid;
+            border-color: $dark_lava;
+            display: none;
+
+            @include media-lg {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+}

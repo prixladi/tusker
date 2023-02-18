@@ -1,8 +1,8 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
 
 const router = new Router();
 
@@ -16,9 +16,10 @@ const schema = {
 
 type Params = z.infer<typeof schema.params>;
 
-router.get<Params>("/:name", validate(schema), async (ctx) => {
+router.get<Params>('/:name', validate(schema), async (ctx) => {
   const queue = await Queue.findOne({
     name: ctx.params.name,
+    deleted: { $ne: true },
   });
 
   if (!queue) {

@@ -1,8 +1,8 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
 
 const router = new Router();
 
@@ -18,15 +18,33 @@ const schema = {
 
 type Query = z.infer<typeof schema.query>;
 
-router.get("/", validate(schema), async (ctx) => {
+type ExtendedQueue = Queue & {
+  stats: { taskCount: number }[];
+};
+
+router.get('/', validate(schema), async (ctx) => {
   const query = ctx.state.query as Query;
 
-  const match = query.search ? { queueName: /query.search/i } : {};
+  const match = query.search
+    ? { name: new RegExp(`.*${query.search}.*`, 'i'), deleted: { $ne: true } }
+    : {};
 
   const count = await Queue.countDocuments(match);
-  const queues = await Queue.aggregate<Queue>([
+  const queues = await Queue.aggregate<ExtendedQueue>([
     {
       $match: match,
+    },
+    {
+      $lookup: {
+        from: 'tasks',
+        localField: 'name',
+        foreignField: 'queueName',
+        pipeline: [{ $group: { _id: null, taskCount: { $sum: 1 } } }],
+        as: 'stats',
+      },
+    },
+    {
+      $sort: { 'stats.0.taskCount': -1, name: 1 },
     },
     {
       $skip: query.skip,
@@ -38,7 +56,10 @@ router.get("/", validate(schema), async (ctx) => {
 
   ctx.response.status = 200;
   ctx.response.body = {
-    data: queues,
+    data: queues.map(({ stats, ...queue }) => ({
+      ...queue,
+      stats: stats?.length ? stats[0] : { taskCount: 0 },
+    })),
     count: count,
   };
 });

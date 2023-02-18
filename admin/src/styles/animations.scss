@@ -1,0 +1,23 @@
+@use 'colors.scss';
+
+@mixin animatedBoxOutline(
+  $useFocus: false,
+  $baseColor: colors.$charcoal,
+  $staleColor:  colors.$davy_gray
+) {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 400ms;
+
+  box-shadow: $staleColor 0px 0px 0px 2px;
+
+  &:hover {
+    box-shadow: $baseColor 0px 0px 0px 2px;
+  }
+
+  @if $useFocus {
+    &:focus {
+      box-shadow: $baseColor 0px 0px 0px 2px;
+    }
+  }
+}
