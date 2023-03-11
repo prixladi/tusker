@@ -2,7 +2,7 @@ import joi from 'joi';
 import { createMutable } from 'solid-js/store';
 import { createMemo, createSignal } from 'solid-js';
 
-type SubmitUtils<T extends {}> = {
+export type SubmitUtils<T extends {}> = {
   setError: <Key extends keyof T>(field: Key, error: string) => void;
 };
 
@@ -35,7 +35,7 @@ const createForm = <T extends {}>({
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
 
-    if(submitting()) return;
+    if (submitting()) return;
 
     setSubmitting(true);
     try {

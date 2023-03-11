@@ -16,7 +16,7 @@ const schema = {
     .strict(),
   params: z
     .object({
-      name: z.string(),
+      id: z.string(),
     })
     .strict(),
 };
@@ -25,15 +25,15 @@ type Params = z.infer<typeof schema.params>;
 
 type Query = z.infer<typeof schema.query>;
 
-router.get<Params>('/:name/tasks', async (ctx) => {
+router.get<Params>('/:id/tasks', async (ctx) => {
   const queue = await Queue.findOne({
-    _id: ctx.params.name,
+    _id: ctx.params.id,
   });
 
   if (!queue) {
     ctx.response.status = 404;
     ctx.response.body = {
-      message: `Queue with name '${ctx.params.name}' does not exist.`,
+      message: `Queue with id '${ctx.params.id}' does not exist.`,
     };
 
     return;
@@ -41,7 +41,7 @@ router.get<Params>('/:name/tasks', async (ctx) => {
 
   const query = ctx.state.query as Query;
 
-  const match = { queueName: queue.name };
+  const match = { queueId: queue._id, active: true };
 
   const count = await Task.countDocuments(match);
   const tasks = await Task.aggregate<Task>([

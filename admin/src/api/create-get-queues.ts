@@ -1,9 +1,8 @@
-import { createEffect, createResource, createSignal } from 'solid-js';
-
-import { getQueues, SearchAndPaginationModel } from './calls';
-
+import { createEffect, createSignal } from 'solid-js';
 import debounce from 'debounce';
-import { QueueList } from './client';
+
+import { getQueues } from './calls';
+import { QueueList, SearchAndPaginationModel } from './client';
 
 const createGetQueues = (
   def: SearchAndPaginationModel = { skip: 0, limit: 20 }

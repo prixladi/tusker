@@ -19,6 +19,7 @@ type Params = z.infer<typeof schema.params>;
 router.get<Params>("/:id", validate(schema), async (ctx) => {
   const task = await Task.findOne({
     _id: new ObjectId(ctx.params.id),
+    status: { $ne: 'deleted' },
   });
 
   if (!task) {

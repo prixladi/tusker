@@ -14,17 +14,4 @@
     padding-top: 2em;
     gap: 3em;
   }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
-
-  .button {
-    margin-top: 0.5em;
-    @include media-md {
-      margin-top: 2em;
-    }
-  }
 }

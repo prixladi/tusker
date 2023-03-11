@@ -1,5 +1,6 @@
 import { Router } from '@oak/router.ts';
 import { z } from '@zod/mod.ts';
+import moment from '@moment/mod.ts';
 
 import validate from '~/middleware/validation-middleware.ts';
 import { Queue } from '~/models/queue.ts';
@@ -9,7 +10,7 @@ const router = new Router();
 const schema = {
   body: z
     .object({
-      name: z
+      id: z
         .string()
         .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
         .min(5)
@@ -36,21 +37,33 @@ const schema = {
 type Body = z.infer<typeof schema.body>;
 
 router.post('/', validate(schema), async (ctx) => {
-  const queue = (await ctx.request.body().value) as Body;
+  const { id: _id, ...queue } = (await ctx.request.body().value) as Body;
 
-  const exists = await Queue.findOne({ name: queue.name });
-  if (exists) {
-    ctx.response.status = 409;
-    ctx.response.body = {
-      message: `Queue with name '${queue.name}' already exist.`,
-    };
-    return;
+  const upsertBody = {
+    ...queue,
+    deleted: false,
+    paused: false,
+    _id,
+    createdAt: moment.utc().toDate(),
+  };
+
+  const existing = await Queue.findOne({ _id });
+  if (existing) {
+    if (!existing.deleted) {
+      ctx.response.status = 409;
+      ctx.response.body = {
+        message: `Queue with id '${_id}' already exist.`,
+      };
+      return;
+    }
+
+    await Queue.updateOne({ _id }, upsertBody);
+  } else {
+    await Queue.insertOne(upsertBody);
   }
 
-  await Queue.insertOne({ ...queue, createdAt: new Date() });
-
   ctx.response.status = 200;
-  ctx.response.body = queue;
+  ctx.response.body = upsertBody;
 });
 
 export default router;

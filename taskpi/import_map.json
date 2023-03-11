@@ -4,6 +4,7 @@
     "~/middleware/": "./src/middleware/",
     "~/models/": "./src/models/",
     "~/utils/": "./src/utils/",
+    "~/config/": "./src/config/",
     "@zod/": "https://deno.land/x/zod@v3.20.2/",
     "@oak/": "https://deno.land/x/oak@v11.1.0/",
     "@mongo/": "https://deno.land/x/mongo@v0.31.1/",

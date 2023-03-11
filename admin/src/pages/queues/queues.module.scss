@@ -8,6 +8,8 @@
 
   max-width: 980px;
   margin: auto;
+  
+  padding-bottom: 1em;
 
   @include media-md {
     padding-top: 2em;
@@ -83,7 +85,7 @@
               }
             }
 
-            &.headerMinBackoff {
+            &.headerMaxParallelTasks {
               border-left: solid;
               border-color: $dark_lava;
               display: none;
@@ -103,12 +105,18 @@
           overflow: hidden;
           white-space: nowrap;
 
+          text-decoration: none;
+
           &.name {
             font-size: 1.2em;
             font-weight: 600;
             text-align: left;
             color: $light_gray;
             cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            } 
           }
 
           &.taskCount {
@@ -126,7 +134,7 @@
             }
           }
 
-          &.minBackoff {
+          &.maxParallelTasks {
             border-left: solid;
             border-color: $dark_lava;
             display: none;

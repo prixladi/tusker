@@ -1,12 +1,18 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
+import moment from '@moment/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
 
 const router = new Router();
 
 const schema = {
+  params: z
+    .object({
+      id: z.string(),
+    })
+    .strict(),
   body: z
     .object({
       maxParallelTasks: z.number().min(1).max(200).optional().default(1),
@@ -30,9 +36,10 @@ const schema = {
 
 type Body = z.infer<typeof schema.body>;
 
-router.patch("/:name", validate(schema), async (ctx) => {
+router.patch('/:id', validate(schema), async (ctx) => {
   const queue = await Queue.findOne({
-    _id: ctx.params.name,
+    _id: ctx.params.id,
+    deleted: { $ne: true },
   });
 
   if (!queue) {
@@ -48,10 +55,10 @@ router.patch("/:name", validate(schema), async (ctx) => {
 
   const updates = {
     ...body,
-    updatedAt: new Date(),
+    updatedAt: moment.utc().toDate(),
   };
 
-  await Queue.updateOne({ name: queue.name }, { $set: updates });
+  await Queue.updateOne({ _id: queue._id }, { $set: updates });
 
   ctx.response.status = 200;
   ctx.response.body = {

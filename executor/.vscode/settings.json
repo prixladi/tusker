@@ -1,0 +1,8 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.importMap": "./import_map.json",
+  "cSpell.words": [
+    "Backoff"
+  ]
+}

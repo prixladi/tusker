@@ -1,6 +1,8 @@
 import { Application } from "@oak/application.ts";
 import { oakCors } from "@cors/mod.ts";
 
+import config from "~/config/mod.ts";
+
 import router from "./controllers/mod.ts";
 
 const app = new Application();
@@ -17,4 +19,4 @@ app.addEventListener("listen", ({ hostname, port, secure }) => {
   );
 });
 
-app.listen({ port: 8000 });
+app.listen({ port: config.port });

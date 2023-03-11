@@ -1,10 +1,10 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
-import moment from "@moment/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
+import moment from '@moment/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
-import { Task } from "~/models/task.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
+import { Task } from '~/models/task.ts';
 
 const router = new Router();
 
@@ -12,7 +12,10 @@ const schema = {
   body: z
     .object({
       url: z.string().url(),
-      queueName: z.string(),
+      method: z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']),
+      body: z.object({}).passthrough(),
+      headers: z.object({}).passthrough(),
+      queueId: z.string(),
       delayInSeconds: z.number().positive().optional().default(0),
     })
     .strict(),
@@ -20,14 +23,17 @@ const schema = {
 
 type Body = z.infer<typeof schema.body>;
 
-router.post("/", validate(schema), async (ctx) => {
+router.post('/', validate(schema), async (ctx) => {
   const { delayInSeconds, ...task } = (await ctx.request.body().value) as Body;
 
-  const queue = await Queue.findOne({ name: task.queueName });
+  const queue = await Queue.findOne({
+    _id: task.queueId,
+    deleted: { $ne: true },
+  });
   if (!queue) {
     ctx.response.status = 400;
     ctx.response.body = {
-      message: `Queue with name '${task.queueName}' does not exist.`,
+      message: `Queue with id '${task.queueId}' does not exist.`,
     };
     return;
   }
@@ -35,13 +41,15 @@ router.post("/", validate(schema), async (ctx) => {
   const now = moment.utc();
   const createdAt = now.toDate();
   const scheduledAt = delayInSeconds
-    ? now.add(delayInSeconds, "seconds").toDate()
+    ? now.add(delayInSeconds, 'seconds').toDate()
     : now.toDate();
 
   const id = await Task.insertOne({
     ...task,
     retries: 0,
     scheduledAt,
+    status: 'active',
+    updatedAt: createdAt,
     createdAt,
   });
 
@@ -49,7 +57,7 @@ router.post("/", validate(schema), async (ctx) => {
   ctx.response.body = {
     id,
     ...task,
-    queueName: queue.name,
+    queueId: queue._id,
   };
 });
 

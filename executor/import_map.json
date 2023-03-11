@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "~/db/": "./src/db/",
+    "~/middleware/": "./src/middleware/",
+    "~/models/": "./src/models/",
+    "~/utils/": "./src/utils/",
+    "~/config/": "./src/config/",
+    "@mongo/": "https://deno.land/x/mongo@v0.31.1/",
+    "@moment/": "https://deno.land/x/momentjs@2.29.1-deno/",
+    "@pLimit/": "https://deno.land/x/p_limit@v1.0.0/",
+    "@log/": "https://deno.land/std@0.179.0/log/" 
+  }
+}
