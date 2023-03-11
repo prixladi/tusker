@@ -8,3 +8,23 @@ services:
     environment:
       MONGO_DATA_DIR: /data/db
       MONGO_LOG_DIR: /dev/null
+
+  taskpi:
+    image: tusker/api 
+    ports:
+      - 8000:8000
+    environment:
+      ENV: "production"
+      MONGO_URL: mongodb://mongo
+    build:
+      context: api
+      dockerfile: Dockerfile
+
+  executor:
+    image: tusker/executor
+    environment:
+      ENV: "production"
+      MONGO_URL: mongodb://mongo
+    build:
+      context: executor
+      dockerfile: Dockerfile

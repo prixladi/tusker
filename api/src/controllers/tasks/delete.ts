@@ -1,28 +1,35 @@
 import { Router } from "@oak/router.ts";
 import { z } from "@zod/mod.ts";
 import { ObjectId } from "@mongo/mod.ts";
+import moment from "@moment/mod.ts";
 
 import validate from "~/middleware/validation-middleware.ts";
 import { Task } from "~/models/task.ts";
-import toResponse from "~/utils/to-response.ts";
 
 const router = new Router();
 
 const schema = {
-  params: z.object({
-    id: z.string(),
-  }).strict(),
+  params: z
+    .object({
+      id: z.string(),
+    })
+    .strict(),
 };
 
 type Params = z.infer<typeof schema.params>;
 
-router.get<Params>("/:id", validate(schema), async (ctx) => {
-  const task = await Task.findOne({
-    _id: new ObjectId(ctx.params.id),
-    status: { $ne: 'deleted' },
-  });
+router.delete<Params>("/:id", validate(schema), async (ctx) => {
+  const now = moment.utc();
 
-  if (!task) {
+  const { matchedCount } = await Task.updateOne(
+    {
+      _id: new ObjectId(ctx.params.id),
+      status: { $ne: "deleted" },
+    },
+    { status: "deleted", updatedAt: now.toDate() },
+  );
+
+  if (!matchedCount) {
     ctx.response.status = 404;
     ctx.response.body = {
       message: `Task with id '${ctx.params.id}' does not exist.`,
@@ -31,8 +38,7 @@ router.get<Params>("/:id", validate(schema), async (ctx) => {
     return;
   }
 
-  ctx.response.status = 200;
-  ctx.response.body = toResponse(task);
+  ctx.response.status = 204;
 });
 
 export default router;

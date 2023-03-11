@@ -7,8 +7,8 @@ const Enum = <T extends string[]>(...args: T) =>
         ...acc,
         [next]: next,
       }),
-      Object.create(null)
-    ) as { [P in UnionFromTuple<typeof args>]: P }
+      Object.create(null),
+    ) as { [P in UnionFromTuple<typeof args>]: P },
   );
 
 export default Enum;

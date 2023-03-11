@@ -2,7 +2,13 @@
   "$schema": "https://deno.land/x/denon@2.4.6/schema.json",
   "watch": false,
   "scripts": {
-    "start:worker": {
+    "start": {
+      "cmd": "deno run --allow-net --allow-env --allow-run --import-map=import_map.json ./src/master.ts",
+      "env": {
+        "ENV": "development"
+      }
+    },
+    "dev:worker": {
       "cmd": "deno run --allow-net --allow-env --import-map=import_map.json ./src/worker.ts",
       "env": {
         "ENV": "development",
@@ -13,10 +19,10 @@
       "cmd": "deno lint"
     },
     "format": {
-      "cmd": "deno format"
+      "cmd": "deno fmt"
     },
     "cache": {
-      "cmd": "deno cache --import-map=import_map.json ./src/worker.ts"
+      "cmd": "deno cache --import-map=import_map.json ./src/worker.ts ./src/master.ts"
     }
   }
 }

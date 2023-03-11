@@ -1,10 +1,10 @@
-import { Router } from '@oak/router.ts';
-import { z } from '@zod/mod.ts';
-import moment from '@moment/mod.ts';
+import { Router } from "@oak/router.ts";
+import { z } from "@zod/mod.ts";
+import moment from "@moment/mod.ts";
 
-import validate from '~/middleware/validation-middleware.ts';
-import { Queue } from '~/models/queue.ts';
-import { Task } from '~/models/task.ts';
+import validate from "~/middleware/validation-middleware.ts";
+import { Queue } from "~/models/queue.ts";
+import { Task } from "~/models/task.ts";
 
 const router = new Router();
 
@@ -18,7 +18,7 @@ const schema = {
 
 type Params = z.infer<typeof schema.params>;
 
-router.delete<Params>('/:id', validate(schema), async (ctx) => {
+router.delete<Params>("/:id", validate(schema), async (ctx) => {
   const now = moment.utc();
   const newQueueName = `${ctx.params.id}-deleted-${now.toDate()}`;
   const { matchedCount } = await Queue.updateOne(
@@ -30,7 +30,7 @@ router.delete<Params>('/:id', validate(schema), async (ctx) => {
       _id: newQueueName,
       deleted: true,
       updatedAt: now.toDate(),
-    }
+    },
   );
 
   if (!matchedCount) {

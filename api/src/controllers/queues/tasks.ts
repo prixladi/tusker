@@ -1,9 +1,9 @@
-import { Router } from '@oak/router.ts';
-import { z } from '@zod/mod.ts';
+import { Router } from "@oak/router.ts";
+import { z } from "@zod/mod.ts";
 
-import { Queue } from '~/models/queue.ts';
-import { Task } from '~/models/task.ts';
-import toResponse from '~/utils/to-response.ts';
+import { Queue } from "~/models/queue.ts";
+import { Task } from "~/models/task.ts";
+import toResponse from "~/utils/to-response.ts";
 
 const router = new Router();
 
@@ -25,7 +25,7 @@ type Params = z.infer<typeof schema.params>;
 
 type Query = z.infer<typeof schema.query>;
 
-router.get<Params>('/:id/tasks', async (ctx) => {
+router.get<Params>("/:id/tasks", async (ctx) => {
   const queue = await Queue.findOne({
     _id: ctx.params.id,
   });

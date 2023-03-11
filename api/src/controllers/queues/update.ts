@@ -1,9 +1,9 @@
-import { Router } from '@oak/router.ts';
-import { z } from '@zod/mod.ts';
-import moment from '@moment/mod.ts';
+import { Router } from "@oak/router.ts";
+import { z } from "@zod/mod.ts";
+import moment from "@moment/mod.ts";
 
-import validate from '~/middleware/validation-middleware.ts';
-import { Queue } from '~/models/queue.ts';
+import validate from "~/middleware/validation-middleware.ts";
+import { Queue } from "~/models/queue.ts";
 
 const router = new Router();
 
@@ -36,7 +36,7 @@ const schema = {
 
 type Body = z.infer<typeof schema.body>;
 
-router.patch('/:id', validate(schema), async (ctx) => {
+router.patch("/:id", validate(schema), async (ctx) => {
   const queue = await Queue.findOne({
     _id: ctx.params.id,
     deleted: { $ne: true },

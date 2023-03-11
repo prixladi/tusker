@@ -1,7 +1,7 @@
 import { ObjectId } from "@mongo/mod.ts";
 
 import { database } from "~/db/mod.ts";
-import { HttpMethod } from "~/utils/http-methods.ts";
+import { HttpMethod } from "../utils/http-methods.ts";
 
 export type Task = {
   _id: ObjectId;
@@ -10,15 +10,13 @@ export type Task = {
   retries: number;
   scheduledAt: Date;
 
-  status: "active" | "done" | "deleted" | "max-retries" | "running";
-
-  latestStatusCode?: number;
+  status: "active" | "done" | "deleted" | "max-retries";
 
   url: string;
   method: HttpMethod;
   // deno-lint-ignore no-explicit-any
-  body?: Record<string, any>;
-  headers?: Record<string, string>;
+  body: Record<string, any>;
+  headers: Record<string, string>;
 
   updatedAt: Date;
   createdAt: Date;

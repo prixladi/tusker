@@ -1,4 +1,4 @@
-import Enum from "~/utils/enum.ts";
+import Enum from "./enum.ts";
 
 export const httpMethods = Enum("GET", "POST", "PUT", "PATCH", "DELETE");
 
