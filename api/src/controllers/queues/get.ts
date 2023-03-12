@@ -1,11 +1,11 @@
-import { Router } from "@oak/router.ts";
-import { z } from "@zod/mod.ts";
-import moment from "@moment/mod.ts";
+import { Router } from '@oak/router.ts';
+import { z } from '@zod/mod.ts';
+import moment from '@moment/mod.ts';
 
-import validate from "~/middleware/validation-middleware.ts";
-import { Queue } from "~/models/queue.ts";
-import toResponse from "~/utils/to-response.ts";
-import { Task } from "~/models/task.ts";
+import validate from '~/middleware/validation-middleware.ts';
+import { Queue } from '~/models/queue.ts';
+import toResponse from '~/utils/to-response.ts';
+import { Task } from '~/models/task.ts';
 
 const router = new Router();
 
@@ -19,7 +19,7 @@ const schema = {
 
 type Params = z.infer<typeof schema.params>;
 
-router.get<Params>("/:id", validate(schema), async (ctx) => {
+router.get<Params>('/:id', validate(schema), async (ctx) => {
   const queue = await Queue.findOne({
     _id: ctx.params.id,
     deleted: { $ne: true },
@@ -34,7 +34,7 @@ router.get<Params>("/:id", validate(schema), async (ctx) => {
     return;
   }
 
-  const date = moment.utc().subtract(1, "minute");
+  const date = moment.utc().subtract(1, 'minute');
 
   const [
     count,
@@ -42,19 +42,22 @@ router.get<Params>("/:id", validate(schema), async (ctx) => {
     failedInLastMinuteCount,
     expiredInLastDay,
   ] = await Promise.all([
-    Task.countDocuments({ status: "active" }),
+    Task.countDocuments({ queueId: queue._id, status: 'active' }),
     Task.countDocuments({
-      status: "done",
-      updatedAt: { $gt: date.toDate() },
+      queueId: queue._id,
+      status: 'done',
+      updatedAt: { $gt: date.subtract(1, 'minute').toDate() },
     }),
     Task.countDocuments({
-      status: "active",
-      updatedAt: { $gt: date.toDate() },
+      queueId: queue._id,
+      status: 'active',
+      updatedAt: { $gt: date.subtract(1, 'minute').toDate() },
       retries: { $gt: 0 },
     }),
     Task.countDocuments({
-      status: "max-retries",
-      updatedAt: { $gt: date.subtract(1, "day").toDate() },
+      queueId: queue._id,
+      status: 'max-retries',
+      updatedAt: { $gt: date.subtract(1, 'day').toDate() },
     }),
   ]);
 

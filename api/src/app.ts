@@ -5,7 +5,13 @@ import moment from "@moment/mod.ts";
 
 import config from "~/config/mod.ts";
 
+import { Queue } from "~/models/queue.ts";
+import { Task } from "~/models/task.ts";
+
 import router from "./controllers/mod.ts";
+
+await Queue.ensureIndexes();
+await Task.ensureIndexes();
 
 const app = new Application();
 
