@@ -21,7 +21,7 @@ const EditQueue = () => {
 
   return (
     <>
-      <SEO title={`${queue()?.data?.id} - edit`} />
+      <SEO title={`${params.name} - edit`} />
       <div class={classes.container}>
         <Breadcrumb
           items={[
