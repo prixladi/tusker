@@ -18,21 +18,6 @@ class StatusCodeError extends Error {
   }
 }
 
-for (let i = 0; i < 10; i++) {
-  await Task.insertOne({
-    queueId: config.queueName || "",
-    url: "https://webhook.site/935a17e3-44d9-4d57-a15f-686d8ab7ec1c",
-    retries: 0,
-    scheduledAt: new Date(),
-    status: "active",
-    method: "PATCH",
-    body: { aaa: "bbb" },
-    headers: { "x-speck": "100" },
-    updatedAt: new Date(),
-    createdAt: new Date(),
-  });
-}
-
 const queueGetter = async (queueName: string, interval = 5_000) => {
   let queue = await Queue.findOne({ _id: queueName });
 

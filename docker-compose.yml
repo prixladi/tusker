@@ -19,6 +19,8 @@ services:
     build:
       context: api
       dockerfile: Dockerfile
+    depends_on:
+      - mongo
 
   executor:
     image: tusker/executor
@@ -27,4 +29,16 @@ services:
       MONGO_URL: mongodb://mongo
     build:
       context: executor
+      dockerfile: Dockerfile
+    depends_on:
+      - mongo
+      
+  admin:
+    image: tusker/admin
+    ports:
+      - 80:80
+    environment:
+      API_URL: "http://localhost:8000"
+    build:
+      context: admin
       dockerfile: Dockerfile

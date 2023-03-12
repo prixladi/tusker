@@ -9,6 +9,7 @@
     "@oak/": "https://deno.land/x/oak@v11.1.0/",
     "@mongo/": "https://deno.land/x/mongo@v0.31.1/",
     "@moment/": "https://deno.land/x/momentjs@2.29.1-deno/",
-    "@cors/": "https://deno.land/x/cors@v1.2.2/"
+    "@cors/": "https://deno.land/x/cors@v1.2.2/",
+    "@log/": "https://deno.land/std@0.179.0/log/"
   }
 }

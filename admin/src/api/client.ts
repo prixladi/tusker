@@ -69,7 +69,7 @@ export type Task = {
   scheduledAt: Date;
 
   status: 'active' | 'done' | 'deleted' | 'max-retries';
-  
+
   updatedAt: Date;
   createdAt: Date;
 };
@@ -79,6 +79,8 @@ export type QueueList = {
   count: number;
 };
 
-const apiClient = axios.create({ baseURL: 'http://localhost:8000/api' });
+const apiClient = axios.create({
+  baseURL: new URL('api', window.config.apiUrl).href,
+});
 
 export default apiClient;
