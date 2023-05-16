@@ -1,6 +1,6 @@
 # Tusker
 
-Task runner application supporting multiple queues, retrying, limits and many more:
+Selfhosted task runner supporting multiple queues, retrying, limits and many more settings such as:
 
 - `maximum` running tasks in parallel
 - `maximum` number tasks running each second
@@ -8,16 +8,15 @@ Task runner application supporting multiple queues, retrying, limits and many mo
 - `maximum` backoff of failed task
 - `minimum` backoff after failed task
 
-Allows delayed execution (`executor`) of tasks.
+Allows (delayed) execution of tasks.  (`executor`)
 
-On application level queues and tasks can be created using REST Api (`api`).
+On application level queues and tasks can be created using REST Api. (`api`)
 
-Also contains simple administration where user can configure queues (`admin`).
-
+Also contains simple administration where user can configure queues. (`admin`)
 
 ### WARNING
 
-Because there is no authorization yet, the application is intended to be running in your internal network **WITHOUT** exposition to the internet. Some kind of authorization and permission system is planned in future. 
+Because there is no authorization yet, the application is intended to be running in your internal network **WITHOUT** exposition to the internet. Some kind of authorization and permission system is planned in the future. 
 
 ## Services
 
@@ -39,7 +38,7 @@ docker-compose up -d
 
 After successfully starting application using `docker-compose` administration will listen on `localhost:80` and api on `localhost:8000`.
 
-## Gallery
+## Application
 
 ![list](assets/list.png)
 
